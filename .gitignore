@@ -1,0 +1,17 @@
+# credenciais
+.env
+
+# dados baixados
+data/*
+!data/.gitkeep
+*.zip
+*.csv
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# jupyter
+.ipynb_checkpoints/
