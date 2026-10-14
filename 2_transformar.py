@@ -20,9 +20,9 @@ import config
 CENTAVOS = Decimal("0.01")
 
 
-# ---------------------------------------------------------------
+
 # Funções de conversão
-# ---------------------------------------------------------------
+
 def limpar_texto(texto):
     """Tira espaços das pontas; texto vazio vira None."""
     if texto is None:
@@ -82,14 +82,14 @@ def negativo(*valores):
     return any(v is not None and v < 0 for v in valores)
 
 
-# ---------------------------------------------------------------
+
 # Regras de cada tabela: recebem a linha Raw e devolvem
 # (tupla para a Silver, None) ou (None, motivo_da_rejeicao)
-# ---------------------------------------------------------------
+
 def regra_viagem(linha, ctx):
     (id_viagem, proposta, situacao, urgente, cod_orgao, orgao, nome, cargo,
-     inicio, fim, destinos, motivo, diarias, passagens, devolucao,
-     outros) = linha
+    inicio, fim, destinos, motivo, diarias, passagens, devolucao,
+    outros) = linha
 
     id_viagem = limpar_texto(id_viagem)
     orgao = limpar_texto(orgao)
@@ -138,7 +138,7 @@ def regra_pagamento(linha, ctx):
 
 def regra_passagem(linha, ctx):
     (id_viagem, meio, pais_o, uf_o, cidade_o, pais_d, uf_d, cidade_d,
-     valor, taxa, emissao) = linha
+    valor, taxa, emissao) = linha
     id_viagem = limpar_texto(id_viagem)
     if id_viagem not in ctx["ids"]:
         return None, "viagem inexistente"
@@ -154,7 +154,7 @@ def regra_passagem(linha, ctx):
 
 def regra_trecho(linha, ctx):
     (id_viagem, sequencia, data_o, uf_o, cidade_o, data_d, uf_d, cidade_d,
-     meio, diarias) = linha
+    meio, diarias) = linha
     id_viagem = limpar_texto(id_viagem)
     if id_viagem not in ctx["ids"]:
         return None, "viagem inexistente"
@@ -173,7 +173,7 @@ def regra_trecho(linha, ctx):
             diarias), None
 
 
-# Ordem importa: a viagem precisa existir antes das tabelas que a referenciam.
+# A viagem precisa existir antes das tabelas que a referenciam.
 ETAPAS = [
     {
         "origem": "raw_viagem", "destino": "silver_viagem",
@@ -184,12 +184,12 @@ ETAPAS = [
                         "valor_passagens", "valor_devolucao",
                         "valor_outros_gastos"],
         "colunas_silver": ["id_viagem", "num_proposta", "situacao",
-                           "viagem_urgente", "cod_orgao_superior",
-                           "nome_orgao_superior", "nome_viajante", "cargo",
-                           "data_inicio", "data_fim", "destinos", "motivo",
-                           "valor_diarias", "valor_passagens",
-                           "valor_devolucao", "valor_outros_gastos",
-                           "valor_total", "duracao_dias"],
+                        "viagem_urgente", "cod_orgao_superior",
+                        "nome_orgao_superior", "nome_viajante", "cargo",
+                        "data_inicio", "data_fim", "destinos", "motivo",
+                        "valor_diarias", "valor_passagens",
+                        "valor_devolucao", "valor_outros_gastos",
+                        "valor_total", "duracao_dias"],
         "regra": regra_viagem,
     },
     {
@@ -198,7 +198,7 @@ ETAPAS = [
                         "nome_orgao_pagador", "nome_ug_pagadora",
                         "tipo_pagamento", "valor"],
         "colunas_silver": ["id_viagem", "num_proposta", "nome_orgao_pagador",
-                           "nome_ug_pagadora", "tipo_pagamento", "valor"],
+                        "nome_ug_pagadora", "tipo_pagamento", "valor"],
         "regra": regra_pagamento,
     },
     {
@@ -209,10 +209,10 @@ ETAPAS = [
                         "uf_destino_ida", "cidade_destino_ida",
                         "valor_passagem", "taxa_servico", "data_emissao"],
         "colunas_silver": ["id_viagem", "meio_transporte", "pais_origem_ida",
-                           "uf_origem_ida", "cidade_origem_ida",
-                           "pais_destino_ida", "uf_destino_ida",
-                           "cidade_destino_ida", "valor_passagem",
-                           "taxa_servico", "data_emissao"],
+                        "uf_origem_ida", "cidade_origem_ida",
+                        "pais_destino_ida", "uf_destino_ida",
+                        "cidade_destino_ida", "valor_passagem",
+                        "taxa_servico", "data_emissao"],
         "regra": regra_passagem,
     },
     {
@@ -222,9 +222,9 @@ ETAPAS = [
                         "destino_data", "destino_uf", "destino_cidade",
                         "meio_transporte", "numero_diarias"],
         "colunas_silver": ["id_viagem", "sequencia_trecho", "origem_data",
-                           "origem_uf", "origem_cidade", "destino_data",
-                           "destino_uf", "destino_cidade", "meio_transporte",
-                           "numero_diarias"],
+                        "origem_uf", "origem_cidade", "destino_data",
+                        "destino_uf", "destino_cidade", "meio_transporte",
+                        "numero_diarias"],
         "regra": regra_trecho,
     },
 ]
@@ -236,7 +236,6 @@ def transformar_etapa(conn, etapa, ctx):
     lidas = gravadas = 0
 
     sql = f"SELECT {', '.join(etapa['colunas_raw'])} FROM {etapa['origem']}"
-    # cursor com nome = lê do servidor aos poucos, sem encher a memória
     with conn.cursor(name=f"cur_{etapa['origem']}") as cur:
         cur.itersize = config.TAMANHO_BLOCO
         cur.execute(sql)
@@ -254,7 +253,7 @@ def transformar_etapa(conn, etapa, ctx):
             lidas += len(bloco)
             gravadas += len(validas)
             banco.inserir_em_lote(conn, etapa["destino"],
-                                  etapa["colunas_silver"], validas)
+                                etapa["colunas_silver"], validas)
     return lidas, gravadas, rejeitados
 
 
@@ -264,13 +263,13 @@ def main():
     try:
         # filhas e pai juntos, para o Postgres aceitar o TRUNCATE com FK
         banco.executar(conn, "TRUNCATE TABLE silver_trecho, silver_pagamento, "
-                             "silver_passagem, silver_viagem "
-                             "RESTART IDENTITY")
+                            "silver_passagem, silver_viagem "
+                            "RESTART IDENTITY")
         for etapa in ETAPAS:
             inicio = time.time()
             lidas, gravadas, rejeitados = transformar_etapa(conn, etapa, ctx)
             print(f"{etapa['destino']}: {lidas:,} lidas, {gravadas:,} "
-                  f"gravadas ({time.time() - inicio:.0f}s)")
+                f"gravadas ({time.time() - inicio:.0f}s)")
             for motivo, qtd in rejeitados.items():
                 print(f"    rejeitadas ({motivo}): {qtd:,}")
         conn.commit()

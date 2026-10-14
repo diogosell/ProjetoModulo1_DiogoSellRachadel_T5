@@ -4,7 +4,7 @@ Pipeline ETL em Python + PostgreSQL com a Arquitetura Medallion (Raw, Silver e G
 abertos de viagens a serviço do Governo Federal (1º semestre de 2025), organiza em um banco relacional e
 responde perguntas sobre os gastos com gráficos.
 
-## Problema que resolve
+## O Problema 
 
 Os dados do Portal da Transparência chegam brutos: quatro CSVs separados, com vírgula como decimal, datas
 em texto (`DD/MM/AAAA`) e sem relação formal entre eles. O projeto transforma isso em tabelas confiáveis,
@@ -86,10 +86,8 @@ e a carga acontece em uma transação (se algo falhar, o estado anterior é mant
 
 ## Decisões de projeto
 
-- **Raw fiel:** todas as colunas do CSV (inclusive as que a Silver não usa) são copiadas como texto. O
+- **Raw:** todas as colunas do CSV (inclusive as que a Silver não usa) são copiadas como texto. O
   cabeçalho original é trocado por nomes em snake_case.
-- **Leitura em blocos:** os CSVs têm de 40 MB a 200 MB; são lidos em blocos de 20 mil linhas e inseridos em
-  lotes de 5 mil.
 - **`valor_total`** = diárias + passagens + outros gastos − devolução.
 - **`duracao_dias`** conta o dia de início e o de fim (25/01 a 01/02 = 8 dias). Para usar só a diferença
   entre as datas, altere `DURACAO_INCLUSIVA` no `config.py` e rode o passo 5 de novo.
@@ -101,8 +99,7 @@ e a carga acontece em uma transação (se algo falhar, o estado anterior é mant
   Removê-las subestimaria o gasto.
 - **Categorias da fonte mantidas:** valores como `Inválido` (meio de transporte) e `Sigiloso` (órgão
   pagador) vêm do dado original e não foram alterados.
-- **Dois órgãos diferentes:** a pergunta 1 usa o órgão *superior* da viagem; a pergunta 7 usa o órgão
-  *pagador*.
+
 
 ## Perguntas de negócio e resultados
 

@@ -19,91 +19,91 @@ DROP TABLE IF EXISTS raw_passagem;
 DROP TABLE IF EXISTS raw_viagem;
 
 
--- ============================================================
+
 -- CAMADA RAW: cópia fiel dos CSVs. Tudo VARCHAR, sem constraints.
--- ============================================================
+
 
 CREATE TABLE raw_viagem (
-    id_processo_viagem      VARCHAR,
-    num_proposta            VARCHAR,
-    situacao                VARCHAR,
-    viagem_urgente          VARCHAR,
-    justificativa_urgencia  VARCHAR,
-    cod_orgao_superior      VARCHAR,
-    nome_orgao_superior     VARCHAR,
-    cod_orgao_solicitante   VARCHAR,
-    nome_orgao_solicitante  VARCHAR,
-    cpf_viajante            VARCHAR,
-    nome                    VARCHAR,
-    cargo                   VARCHAR,
-    funcao                  VARCHAR,
-    descricao_funcao        VARCHAR,
-    data_inicio             VARCHAR,
-    data_fim                VARCHAR,
-    destinos                VARCHAR,
-    motivo                  VARCHAR,
-    valor_diarias           VARCHAR,
-    valor_passagens         VARCHAR,
-    valor_devolucao         VARCHAR,
-    valor_outros_gastos     VARCHAR
+    id_processo_viagem      VARCHAR(255),
+    num_proposta            VARCHAR(255),
+    situacao                VARCHAR(255),
+    viagem_urgente          VARCHAR(255),
+    justificativa_urgencia  VARCHAR(4000),
+    cod_orgao_superior      VARCHAR(255),
+    nome_orgao_superior     VARCHAR(255),
+    cod_orgao_solicitante   VARCHAR(255),
+    nome_orgao_solicitante  VARCHAR(255),
+    cpf_viajante            VARCHAR(255),
+    nome                    VARCHAR(255),
+    cargo                   VARCHAR(255),
+    funcao                  VARCHAR(255),
+    descricao_funcao        VARCHAR(255),
+    data_inicio             VARCHAR(255),
+    data_fim                VARCHAR(255),
+    destinos                VARCHAR(4000),
+    motivo                  VARCHAR(4000),
+    valor_diarias           VARCHAR(255),
+    valor_passagens         VARCHAR(255),
+    valor_devolucao         VARCHAR(255),
+    valor_outros_gastos     VARCHAR(255)
 );
 
 CREATE TABLE raw_pagamento (
-    id_processo_viagem   VARCHAR,
-    num_proposta         VARCHAR,
-    cod_orgao_superior   VARCHAR,
-    nome_orgao_superior  VARCHAR,
-    cod_orgao_pagador    VARCHAR,
-    nome_orgao_pagador   VARCHAR,
-    cod_ug_pagadora      VARCHAR,
-    nome_ug_pagadora     VARCHAR,
-    tipo_pagamento       VARCHAR,
-    valor                VARCHAR
+    id_processo_viagem   VARCHAR(255),
+    num_proposta         VARCHAR(255),
+    cod_orgao_superior   VARCHAR(255),
+    nome_orgao_superior  VARCHAR(255),
+    cod_orgao_pagador    VARCHAR(255),
+    nome_orgao_pagador   VARCHAR(255),
+    cod_ug_pagadora      VARCHAR(255),
+    nome_ug_pagadora     VARCHAR(255),
+    tipo_pagamento       VARCHAR(255),
+    valor                VARCHAR(255)
 );
 
 CREATE TABLE raw_passagem (
-    id_processo_viagem   VARCHAR,
-    num_proposta         VARCHAR,
-    meio_transporte      VARCHAR,
-    pais_origem_ida      VARCHAR,
-    uf_origem_ida        VARCHAR,
-    cidade_origem_ida    VARCHAR,
-    pais_destino_ida     VARCHAR,
-    uf_destino_ida       VARCHAR,
-    cidade_destino_ida   VARCHAR,
-    pais_origem_volta    VARCHAR,
-    uf_origem_volta      VARCHAR,
-    cidade_origem_volta  VARCHAR,
-    pais_destino_volta   VARCHAR,
-    uf_destino_volta     VARCHAR,
-    cidade_destino_volta VARCHAR,
-    valor_passagem       VARCHAR,
-    taxa_servico         VARCHAR,
-    data_emissao         VARCHAR,
+    id_processo_viagem   VARCHAR(255),
+    num_proposta         VARCHAR(255),
+    meio_transporte      VARCHAR(255),
+    pais_origem_ida      VARCHAR(255),
+    uf_origem_ida        VARCHAR(255),
+    cidade_origem_ida    VARCHAR(255),
+    pais_destino_ida     VARCHAR(255),
+    uf_destino_ida       VARCHAR(255),
+    cidade_destino_ida   VARCHAR(255)
+    pais_origem_volta    VARCHAR(255),
+    uf_origem_volta      VARCHAR(255),
+    cidade_origem_volta  VARCHAR(255),
+    pais_destino_volta   VARCHAR(255),
+    uf_destino_volta     VARCHAR(255),
+    cidade_destino_volta VARCHAR(255),
+    valor_passagem       VARCHAR(255),
+    taxa_servico         VARCHAR(255),
+    data_emissao         VARCHAR(255),
     hora_emissao         VARCHAR
 );
 
 CREATE TABLE raw_trecho (
-    id_processo_viagem  VARCHAR,
-    num_proposta        VARCHAR,
-    sequencia_trecho    VARCHAR,
-    origem_data         VARCHAR,
-    origem_pais         VARCHAR,
-    origem_uf           VARCHAR,
-    origem_cidade       VARCHAR,
-    destino_data        VARCHAR,
-    destino_pais        VARCHAR,
-    destino_uf          VARCHAR,
-    destino_cidade      VARCHAR,
-    meio_transporte     VARCHAR,
-    numero_diarias      VARCHAR,
-    missao              VARCHAR
+    id_processo_viagem  VARCHAR(255),
+    num_proposta        VARCHAR(255),
+    sequencia_trecho    VARCHAR(255),
+    origem_data         VARCHAR(255),
+    origem_pais         VARCHAR(255),
+    origem_uf           VARCHAR(255),
+    origem_cidade       VARCHAR(255),
+    destino_data        VARCHAR(255),
+    destino_pais        VARCHAR(255),
+    destino_uf          VARCHAR(255),
+    destino_cidade      VARCHAR(255),
+    meio_transporte     VARCHAR(255),
+    numero_diarias      VARCHAR(255),
+    missao              VARCHAR(255)
 );
 
 
--- ============================================================
+
 -- CAMADA SILVER: dados tipados, com PK, FK e constraints.
--- ============================================================
+
 
 CREATE TABLE silver_viagem (
     id_viagem            VARCHAR(20)   PRIMARY KEY NOT NULL,

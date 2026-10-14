@@ -22,7 +22,7 @@ import config
 
 def csvs_presentes():
     return all((config.DATA_DIR / arq).exists()
-               for arq, _ in config.ARQUIVOS_RAW.values())
+            for arq, _ in config.ARQUIVOS_RAW.values())
 
 
 def baixar_zip():
@@ -32,7 +32,7 @@ def baixar_zip():
     config.DATA_DIR.mkdir(exist_ok=True)
     print("Baixando o arquivo do Google Drive...")
     caminho = gdown.download(id=config.DRIVE_FILE_ID,
-                             output=str(config.ZIP_PATH), quiet=False)
+                            output=str(config.ZIP_PATH), quiet=False)
     if caminho is None:
         raise RuntimeError("Não foi possível baixar o arquivo do Drive")
 
@@ -67,7 +67,7 @@ def carregar_tabela(conn, tabela, arquivo, colunas):
     total = 0
     for bloco in blocos:
         banco.inserir_em_lote(conn, tabela, colunas,
-                              bloco.itertuples(index=False, name=None))
+                            bloco.itertuples(index=False, name=None))
         total += len(bloco)
     return total
 
@@ -96,7 +96,7 @@ def main():
             conn.commit()  # TRUNCATE + carga valem juntos, ou nada vale
             no_banco = banco.contar_linhas(conn, tabela)
             print(f"{tabela}: {total:,} linhas lidas, {no_banco:,} no banco "
-                  f"({time.time() - inicio:.0f}s)")
+                f"({time.time() - inicio:.0f}s)")
         except Exception as erro:
             conn.rollback()
             falhas += 1
